@@ -2,13 +2,13 @@
 /**
  * Custom Post Type functionality
  *
- * @package     KnowTheCode\TeamBios\Custom
+ * @package     KkTheme\CompanyInfo\Custom
  * @since       1.0.0
- * @author      hellofromTonya
- * @link        https://knowthecode.io
+ * @author      Karl Karlsson
+ * @link        https://karlkarlssontest.se
  * @license     GNU General Public License 2.0+
  */
-namespace KnowTheCode\TeamBios\Custom;
+namespace KkTheme\CompanyInfo\Custom;
 
 add_action( 'init', __NAMESPACE__ . '\register_custom_post_type' );
 /**
@@ -21,46 +21,236 @@ add_action( 'init', __NAMESPACE__ . '\register_custom_post_type' );
 function register_custom_post_type() {
 
 	$labels = array(
-		'name'               => _x( 'Team Bios', 'post type general name', 'teambios' ),
-		'singular_name'      => _x( 'Team Bio', 'post type singular name', 'teambios' ),
-		'menu_name'          => _x( 'Team Bios', 'admin menu', 'teambios' ),
-		'name_admin_bar'     => _x( 'Team Bio', 'add new on admin bar', 'teambios' ),
-		'add_new'            => _x( 'Add New Team Bio', 'team-bios', 'teambios' ),
-		'add_new_item'       => __( 'Add New Team Bio', 'teambios' ),
-		'new_item'           => __( 'New Team Bio', 'teambios' ),
-		'edit_item'          => __( 'Edit Team Bio', 'teambios' ),
-		'view_item'          => __( 'View Team Bio', 'teambios' ),
-		'all_items'          => __( 'All Team Bios', 'teambios' ),
-		'search_items'       => __( 'Search Team Bios', 'teambios' ),
-		'parent_item_colon'  => __( 'Parent Team Bios:', 'teambios' ),
-		'not_found'          => __( 'No team bios found.', 'teambios' ),
-		'not_found_in_trash' => __( 'No team bios found in Trash.', 'teambios' ),
+		'name'               => _x( 'Företags Info', 'post type general name', 'foretagsinfo' ),
+		'singular_name'      => _x( 'FöretagsInfo', 'post type singular name', 'foretagsinfo' ),
+		'menu_name'          => _x( 'Företags Info', 'admin menu', 'foretagsinfo' ),
+		'name_admin_bar'     => _x( 'Företags Info', 'add new on admin bar', 'foretagsinfo' ),
+		'add_new'            => _x( 'Lägg till ny', 'foretagsinfo', 'foretagsinfo' ),
+		'add_new_item'       => __( 'Lägg till ny företags info', 'foretagsinfo' ),
+		'new_item'           => __( 'Ny Företags Info', 'foretagsinfo' ),
+		'edit_item'          => __( 'Ändra Företags Info', 'foretagsinfo' ),
+		'view_item'          => __( 'Se Företags Info', 'foretagsinfo' ),
+		'all_items'          => __( 'All Företags Info', 'foretagsinfo' ),
+		'search_items'       => __( 'Sök Företags Info', 'foretagsinfo' ),
+		'parent_item_colon'  => __( 'Parent Företags Info:', 'foretagsinfo' ),
+		'not_found'          => __( 'Ingen Företags Info hittad.', 'foretagsinfo' ),
+		'not_found_in_trash' => __( 'Ingen Företags Info hittad i papperskorgen.', 'foretagsinfo' ),
 
-		'featured_image'        => __( 'Profile Image', 'teambios' ),
-		'set_featured_image'    => __( 'Set Profile Image', 'teambios' ),
-		'remove_featured_image' => __( 'Remove Profile Image', 'teambios' ),
-		'use_featured_image'    => __( 'Use Profile Image', 'teambios' ),
+		'featured_image'        => __( 'Profilbild', 'foretagsinfo' ),
+		'set_featured_image'    => __( 'Lägg till profil bild', 'foretagsinfo' ),
+		'remove_featured_image' => __( 'Ta bort profil bild', 'foretagsinfo' ),
+		'use_featured_image'    => __( 'Använd profil bild', 'foretagsinfo' ),
 	);
 
+	// Removes our different supports (features)
 	$features = get_all_post_type_features( 'post', array(
+		'thumbnail',
 		'excerpt',
 		'comments',
 		'trackbacks',
 		'custom-fields',
+		'editor',
+		'author'
 	) );
 
 	$args = array(
-		'label'        => __( 'Team Bios', 'teambios' ),
+		'label'        => __( 'Företags Info', 'foretagsinfo' ),
 		'labels'       => $labels,
-		'public'       => true,
+		'public'       => true, // makes our plugin shown public. if not activated it will not show in db
 		'supports'     => $features,
 		'menu_icon'    => 'dashicons-admin-users',
-		'hierarchical' => false,
-		'has_archive'  => true,
+		// 'hierarchical' => false,
+		// 'has_archive'  => true,
 	);
 
 	register_post_type( 'team-bios', $args );
+
 }
+
+// add_action('add_meta_boxes', 'create_meta_box');
+add_action( 'add_meta_boxes', __NAMESPACE__ . '\create_meta_box' );
+
+/**
+ * This function creates a metabox to the custom post type
+ * @return custom post type with team info
+ */
+function create_meta_box() {
+	add_meta_box(
+		'info_metabox',
+		'Företags Info:',
+		'create_info_metabox',
+		'Företags Info',
+		'normal',
+		'default'
+	);
+}
+
+/**
+ * This function will add the metabox to the custom post type
+ * @return custom post type with team info
+ */ 
+function info_metabox($post) {
+	echo 'Infon skrivs in här';
+}
+
+
+/**
+ * This function will create the output of the metabox
+ * @return input-field in the metabox.
+ */ 
+function create_info_metabox($post) {
+?>
+	<form action="" method="post">
+<?php
+		// add nonce for security
+		wp_nonce_field('kk_metabox_nonce', 'kk_nonce');
+		// retrive the metadata values if they exist 
+		$name = get_post_meta($post->ID, 'name', true); 
+		$position = get_post_meta($post->ID, 'position', true); 
+		$email = get_post_meta($post->ID, 'email', true); 
+		$tel = get_post_meta($post->ID, 'tel', true);
+		$office = get_post_meta($post->ID, 'office', true);
+		$officenr = get_post_meta($post->ID, 'officenr', true);
+		
+		
+		?>
+		<p>
+			<?php echo 'Namn:' ?> <br/>
+			<span>Skriv in ditt namn</span><br/>
+			<input type="text" name="name" size="26" value="<?php echo esc_attr( $name ); ?>" placeholder="Förnamn Efternamn" />
+		</p>
+		<p>
+			<?php echo 'Position:'?> <br/>
+			<input type="text" name="position" value="<?php echo esc_attr( $position ); ?>" placeholder="Platschef" />
+		</p>
+		<p>
+			<?php echo 'Email:'?> <br/>
+			<input type="text" name="email" value="<?php echo esc_attr( $email ); ?>" placeholder="hej@hej.se" />
+		</p>
+		<p>
+			<?php echo 'Tel nr:' ?> <br/>
+			<input type="text" name="tel" value="<?php echo esc_attr( $tel ); ?>" placeholder="072-1231231" />
+		</p>
+		<p>
+			<?php echo 'Kontor:' ?> <br/>
+			<input type="text" name="office" value="<?php echo esc_attr( $office ); ?>" placeholder="Cementvägen 7, 136 50 Jordbro" />
+		</p>
+		<p>
+			<?php echo 'Kontorsnummer:' ?> <br/>
+			<input type="text" name="officenr" value="<?php echo esc_attr( $officenr ); ?>" placeholder="08-080808" />
+		</p>
+	</form>
+<?php 
+}
+
+/**
+ * This function will save the data from the input field into a variable
+ * @param var $new_adress_value the data you write in input will be saved to this variable.
+ * @param $_POST['adress'] value of inputfield.
+ * @return saves the information you type into input-field in a variable $new_adress_value
+ */ 
+add_action( 'save_post', __NAMESPACE__ . '\save_name_meta' );
+function save_name_meta( $post_id ) {
+	// if the nonce isn't verified, prteam saving
+	if(!isset($_POST['kk_nonce']) ||
+		!wp_verify_nonce($_POST['kk_nonce'],
+		'kk_metabox_nonce')) return;
+	if(isset($_POST['name'])) {
+		$new_adress_value = ($_POST['name']);
+		update_post_meta($post_id, 'name', $new_adress_value);
+	}
+}
+
+/**
+ * This function will save the data from the input field into a variable
+ * @param var $new_postnr_value the data you write in input will be saved to this variable.
+ * @param $_POST['postnr'] value of inputfield.
+ * @return saves the information you type into input-field in a variable $new_postnr_value
+ */ 
+add_action( 'save_post', __NAMESPACE__ . '\save_position_meta' );
+function save_position_meta( $post_id ) {
+	// if the nonce isn't verified, prteam saving
+	if(!isset($_POST['kk_nonce']) ||
+		!wp_verify_nonce($_POST['kk_nonce'],
+		'kk_metabox_nonce')) return;
+	if(isset($_POST['position'])) {
+		$new_postnr_value = ($_POST['position']);
+		update_post_meta($post_id, 'position', $new_postnr_value);
+	}
+}
+
+/**
+ * This function will save the data from the input field into a variable
+ * @param var $new_tbana_value the data you write in input will be saved to this variable.
+ * @param $_POST['tbana'] value of inputfield.
+ * @return saves the information you type into input-field in a variable $new_tbana_value
+ */ 
+add_action( 'save_post', __NAMESPACE__ . '\save_email_meta' );
+function save_email_meta( $post_id ) {
+	// if the nonce isn't verified, prteam saving
+	if(!isset($_POST['kk_nonce']) ||
+		!wp_verify_nonce($_POST['kk_nonce'],
+		'kk_metabox_nonce')) return;
+	if(isset($_POST['email'])) {
+		$new_tbana_value = ($_POST['email']);
+		update_post_meta($post_id, 'email', $new_tbana_value);
+	}
+}
+
+/**
+ * This function will save the data from the input field into a variable
+ * @param var $new_tel_value the data you write in input will be saved to this variable.
+ * @param $_POST['tel'] value of inputfield.
+ * @return saves the information you type into input-field in a variable $new_tel_value
+ */ 
+add_action( 'save_post', __NAMESPACE__ . '\save_tele_meta' );
+function save_tele_meta( $post_id ) {
+	// if the nonce isn't verified, prteam saving
+	if(!isset($_POST['kk_nonce']) ||
+		!wp_verify_nonce($_POST['kk_nonce'],
+		'kk_metabox_nonce')) return;
+	if(isset($_POST['tel'])) {
+		$new_tel_value = ($_POST['tel']);
+		update_post_meta($post_id, 'tel', $new_tel_value);
+	}
+}
+/**
+ * This function will save the data from the input field into a variable
+ * @param var $new_tel_value the data you write in input will be saved to this variable.
+ * @param $_POST['tel'] value of inputfield.
+ * @return saves the information you type into input-field in a variable $new_tel_value
+ */ 
+add_action( 'save_post', __NAMESPACE__ . '\save_office_meta' );
+function save_office_meta( $post_id ) {
+	// if the nonce isn't verified, prteam saving
+	if(!isset($_POST['kk_nonce']) ||
+		!wp_verify_nonce($_POST['kk_nonce'],
+		'kk_metabox_nonce')) return;
+	if(isset($_POST['office'])) {
+		$new_tel_value = ($_POST['office']);
+		update_post_meta($post_id, 'office', $new_tel_value);
+	}
+}
+/**
+ * This function will save the data from the input field into a variable
+ * @param var $new_tel_value the data you write in input will be saved to this variable.
+ * @param $_POST['tel'] value of inputfield.
+ * @return saves the information you type into input-field in a variable $new_tel_value
+ */ 
+add_action( 'save_post', __NAMESPACE__ . '\save_officenr_meta' );
+function save_officenr_meta( $post_id ) {
+	// if the nonce isn't verified, prteam saving
+	if(!isset($_POST['kk_nonce']) ||
+		!wp_verify_nonce($_POST['kk_nonce'],
+		'kk_metabox_nonce')) return;
+	if(isset($_POST['officenr'])) {
+		$new_tel_value = ($_POST['officenr']);
+		update_post_meta($post_id, 'officenr', $new_tel_value);
+	}
+}
+
+
+
 
 /**
  * Get all the post type features for the given post type.
@@ -91,3 +281,4 @@ function get_all_post_type_features( $post_type = 'post', $exclude_features = ar
 
 	return $features;
 }
+
