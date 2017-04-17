@@ -67,9 +67,8 @@ function register_custom_post_type() {
 
 }
 
-// add_action('add_meta_boxes', 'create_meta_box');
-add_action( 'add_meta_boxes', __NAMESPACE__ . '\create_meta_box' );
 
+add_action( 'add_meta_boxes', __NAMESPACE__ . '\create_meta_box' );
 /**
  * This function creates a metabox to the custom post type
  * @return custom post type with team info
@@ -87,7 +86,7 @@ function create_meta_box() {
 
 /**
  * This function will add the metabox to the custom post type
- * @return custom post type with team info
+ * @return custom post type with company info
  */ 
 function info_metabox($post) {
 	echo 'Infon skrivs in här';
@@ -143,13 +142,14 @@ function create_info_metabox($post) {
 <?php 
 }
 
+add_action( 'save_post', __NAMESPACE__ . '\save_name_meta' );
 /**
  * This function will save the data from the input field into a variable
  * @param var $new_adress_value the data you write in input will be saved to this variable.
  * @param $_POST['adress'] value of inputfield.
  * @return saves the information you type into input-field in a variable $new_adress_value
  */ 
-add_action( 'save_post', __NAMESPACE__ . '\save_name_meta' );
+
 function save_name_meta( $post_id ) {
 	// if the nonce isn't verified, prteam saving
 	if(!isset($_POST['kk_nonce']) ||
@@ -161,13 +161,14 @@ function save_name_meta( $post_id ) {
 	}
 }
 
+add_action( 'save_post', __NAMESPACE__ . '\save_position_meta' );
 /**
  * This function will save the data from the input field into a variable
  * @param var $new_postnr_value the data you write in input will be saved to this variable.
  * @param $_POST['postnr'] value of inputfield.
  * @return saves the information you type into input-field in a variable $new_postnr_value
  */ 
-add_action( 'save_post', __NAMESPACE__ . '\save_position_meta' );
+
 function save_position_meta( $post_id ) {
 	// if the nonce isn't verified, prteam saving
 	if(!isset($_POST['kk_nonce']) ||
@@ -179,13 +180,14 @@ function save_position_meta( $post_id ) {
 	}
 }
 
+add_action( 'save_post', __NAMESPACE__ . '\save_email_meta' );
 /**
  * This function will save the data from the input field into a variable
  * @param var $new_tbana_value the data you write in input will be saved to this variable.
  * @param $_POST['tbana'] value of inputfield.
  * @return saves the information you type into input-field in a variable $new_tbana_value
  */ 
-add_action( 'save_post', __NAMESPACE__ . '\save_email_meta' );
+
 function save_email_meta( $post_id ) {
 	// if the nonce isn't verified, prteam saving
 	if(!isset($_POST['kk_nonce']) ||
@@ -197,13 +199,14 @@ function save_email_meta( $post_id ) {
 	}
 }
 
+add_action( 'save_post', __NAMESPACE__ . '\save_tele_meta' );
 /**
  * This function will save the data from the input field into a variable
  * @param var $new_tel_value the data you write in input will be saved to this variable.
  * @param $_POST['tel'] value of inputfield.
  * @return saves the information you type into input-field in a variable $new_tel_value
  */ 
-add_action( 'save_post', __NAMESPACE__ . '\save_tele_meta' );
+
 function save_tele_meta( $post_id ) {
 	// if the nonce isn't verified, prteam saving
 	if(!isset($_POST['kk_nonce']) ||
@@ -214,6 +217,7 @@ function save_tele_meta( $post_id ) {
 		update_post_meta($post_id, 'tel', $new_tel_value);
 	}
 }
+
 /**
  * This function will save the data from the input field into a variable
  * @param var $new_tel_value the data you write in input will be saved to this variable.
@@ -231,13 +235,15 @@ function save_office_meta( $post_id ) {
 		update_post_meta($post_id, 'office', $new_tel_value);
 	}
 }
+
+add_action( 'save_post', __NAMESPACE__ . '\save_officenr_meta' );
 /**
  * This function will save the data from the input field into a variable
  * @param var $new_tel_value the data you write in input will be saved to this variable.
  * @param $_POST['tel'] value of inputfield.
  * @return saves the information you type into input-field in a variable $new_tel_value
  */ 
-add_action( 'save_post', __NAMESPACE__ . '\save_officenr_meta' );
+
 function save_officenr_meta( $post_id ) {
 	// if the nonce isn't verified, prteam saving
 	if(!isset($_POST['kk_nonce']) ||
@@ -248,9 +254,6 @@ function save_officenr_meta( $post_id ) {
 		update_post_meta($post_id, 'officenr', $new_tel_value);
 	}
 }
-
-
-
 
 /**
  * Get all the post type features for the given post type.
