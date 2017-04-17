@@ -110,10 +110,8 @@ function create_info_metabox($post) {
 		$email = get_post_meta($post->ID, 'email', true); 
 		$tel = get_post_meta($post->ID, 'tel', true);
 		$office = get_post_meta($post->ID, 'office', true);
-		$officenr = get_post_meta($post->ID, 'officenr', true);
-		
-		
-		?>
+		$officenr = get_post_meta($post->ID, 'officenr', true);		
+?>
 		<p>
 			<?php echo 'Namn:' ?> <br/>
 			<span>Skriv in ditt namn</span><br/>
